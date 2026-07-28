@@ -1,5 +1,5 @@
 // ================================
-// Gig Edge Rules v1.0
+// Gig Edge Rules v1.1
 // ================================
 
 const RULES = {
@@ -7,68 +7,142 @@ const RULES = {
     minGrossHourly: 30.00,
     maxMinutes: 60,
     maxDropOffs: 4
-};function analyzeOffer() {
+};
 
-    let pay = parseFloat(document.getElementById("pay").value);
-    let miles = parseFloat(document.getElementById("miles").value);
-    let minutes = parseFloat(document.getElementById("minutes").value);
-    let drops = parseInt(document.getElementById("drops").value);
+function analyzeOffer() {
 
-    if (isNaN(pay) || isNaN(miles) || isNaN(minutes) || isNaN(drops)) {
-        alert("Please fill in all fields.");
+    const pay = parseFloat(document.getElementById("pay").value);
+    const miles = parseFloat(document.getElementById("miles").value);
+    const minutes = parseFloat(document.getElementById("minutes").value);
+    const drops = parseInt(document.getElementById("drops").value);
+
+    if (
+        isNaN(pay) ||
+        isNaN(miles) ||
+        isNaN(minutes) ||
+        isNaN(drops) ||
+        miles <= 0 ||
+        minutes <= 0
+    ) {
+        alert("Please enter valid values.");
         return;
     }
 
-    let payPerMile = pay / miles;
-    let grossHourly = pay / (minutes / 60);
+    const payPerMile = pay / miles;
+    const grossHourly = pay / (minutes / 60);
 
     let score = 0;
+    let reasons = [];
 
-    // Pay per mile (40 points)
-   if (payPerMile >= RULES.minPayPerMile)
+    // -------------------------
+    // Pay Per Mile (40 pts)
+    // -------------------------
+
+    if (payPerMile >= 3) {
         score += 40;
-    else if (payPerMile >= 1.5)
-        score += 25;
-    else
-        score += 10;
-
-    // Gross hourly (35 points)
-if (grossHourly >= RULES.minGrossHourly)
+        reasons.push("✅ Excellent pay per mile");
+    } else if (payPerMile >= 2.5) {
         score += 35;
-    else if (grossHourly >= 20)
+        reasons.push("✅ Very good pay per mile");
+    } else if (payPerMile >= 2) {
+        score += 30;
+        reasons.push("✅ Good pay per mile");
+    } else if (payPerMile >= 1.5) {
         score += 20;
-    else
-        score += 10;
-
-    // Time (15 points)
-  if (minutes <= RULES.maxMinutes)
-        score += 15;
-    else if (minutes <= 90)
-        score += 10;
-    else
-        score += 5;
-
-    // Drop-offs (10 points)
-   if (drops <= RULES.maxDropOffs)
-        score += 10;
-    else if (drops <= 7)
-        score += 7;
-    else
-        score += 3;
-
-    let decision = "";
-    let reason = "";
-
-    if (score >= 85) {
-        decision = "🟢 ACCEPT";
-        reason = "Excellent pay per mile and hourly earnings.";
-    } else if (score >= 65) {
-        decision = "🟡 BORDERLINE";
-        reason = "Decent offer, but consider waiting if it's busy.";
+        reasons.push("⚠ Average pay per mile");
     } else {
-        decision = "🔴 DECLINE";
-        reason = "Below your target thresholds.";
+        score += 10;
+        reasons.push("❌ Low pay per mile");
     }
+
+    // -------------------------
+    // Gross Hourly (35 pts)
+    // -------------------------
+
+    if (grossHourly >= 40) {
+        score += 35;
+        reasons.push("✅ Excellent hourly earnings");
+    } else if (grossHourly >= 30) {
+        score += 30;
+        reasons.push("✅ Strong hourly earnings");
+    } else if (grossHourly >= 20) {
+        score += 20;
+        reasons.push("⚠ Average hourly earnings");
+    } else {
+        score += 10;
+        reasons.push("❌ Low hourly earnings");
+    }
+
+    // -------------------------
+    // Time (15 pts)
+    // -------------------------
+
+    if (minutes <= 60) {
+        score += 15;
+        reasons.push("✅ Efficient trip length");
+    } else if (minutes <= 90) {
+        score += 10;
+        reasons.push("⚠ Longer trip");
+    } else {
+        score += 5;
+        reasons.push("❌ Very long trip");
+    }
+
+    // -------------------------
+    // Drop-Offs (10 pts)
+    // -------------------------
+
+    if (drops <= 2) {
+        score += 10;
+        reasons.push("✅ Low drop-off count");
+    } else if (drops <= 4) {
+        score += 8;
+        reasons.push("✅ Reasonable drop-offs");
+    } else if (drops <= 7) {
+        score += 5;
+        reasons.push("⚠ Many drop-offs");
+    } else {
+        score += 2;
+        reasons.push("❌ Heavy drop-off load");
+    }
+
+    // -------------------------
+    // Grade
+    // -------------------------
+
+    let grade;
+
+    if (score >= 95)
+        grade = "A+";
+    else if (score >= 90)
+        grade = "A";
+    else if (score >= 80)
+        grade = "B";
+    else if (score >= 70)
+        grade = "C";
+    else if (score >= 60)
+        grade = "D";
+    else
+        grade = "F";
+
+    // -------------------------
+    // Decision
+    // -------------------------
+
+    let decision;
+
+    if (score >= 90)
+        decision = "🟢 ACCEPT";
+    else if (score >= 75)
+        decision = "🟡 ACCEPT IF SLOW";
+    else if (score >= 60)
+        decision = "🟠 WAIT FOR BETTER";
+    else
+        decision = "🔴 DECLINE";
+
+    // -------------------------
+    // Display
+    // -------------------------
 
     document.getElementById("ppm").innerHTML =
         "Pay Per Mile: $" + payPerMile.toFixed(2);
@@ -79,7 +153,24 @@ if (grossHourly >= RULES.minGrossHourly)
     document.getElementById("score").innerHTML =
         "Judah Score: " + score + "/100";
 
-    document.getElementById("decision").innerHTML = decision;
+    document.getElementById("grade").innerHTML =
+        "Grade: " + grade;
 
-    document.getElementById("reason").innerHTML = reason;
+    document.getElementById("decision").innerHTML =
+        decision;
+
+    const list = document.getElementById("reasonList");
+
+    list.innerHTML = "";
+
+    reasons.forEach(function(reason) {
+
+        const li = document.createElement("li");
+
+        li.textContent = reason;
+
+        list.appendChild(li);
+
+    });
+
 }
