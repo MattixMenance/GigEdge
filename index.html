@@ -1,65 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gig Edge</title>
-    <link rel="manifest" href="manifest.json">
-
-    <link rel="stylesheet" href="style.css">
-    <script>
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js");
-}
-</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#121212">
+<title>Gig Edge</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
 <div class="container">
+  <h1>🚗 Gig Edge</h1>
+  <p class="subtitle">Spark Offer Analyzer</p>
 
-    <h1>🚗 Gig Edge</h1>
-    <p class="subtitle">Spark Offer Analyzer</p>
-
-    <div class="card">
-
-        <label>💰 Order Pay ($)</label>
-        <input id="pay" type="number" step="0.01">
-
-        <label>🚗 Miles</label>
-        <input id="miles" type="number" step="0.1">
-
-        <label>⏱ Minutes</label>
-        <input id="minutes" type="number">
-
-        <label>📦 Drop-Offs</label>
-        <input id="drops" type="number">
-
-        <button onclick="analyzeOffer()">
-            Analyze Offer
-        </button>
-
+  <div class="card input-card">
+    <div class="field">
+      <label for="pay">💰 Order Pay ($)</label>
+      <input id="pay" type="number" inputmode="decimal" step="0.01" autocomplete="off">
     </div>
 
-    <div class="card">
-
-        <h2>Results</h2>
-
-        <p id="ppm">Pay Per Mile:</p>
-
-        <p id="hourly">Gross Hourly:</p>
-
-        <p id="score">Judah Score:</p>
-
-        <h2 id="decision"></h2>
-
-        <p id="reason"></p>
-
+    <div class="field">
+      <label for="miles">🚗 Miles</label>
+      <input id="miles" type="number" inputmode="decimal" step="0.1" autocomplete="off">
     </div>
 
+    <div class="field">
+      <label for="minutes">⏱ Minutes</label>
+      <input id="minutes" type="number" inputmode="numeric" step="1" autocomplete="off">
+    </div>
+
+    <div class="field">
+      <label for="drops">📦 Drop-Offs</label>
+      <input id="drops" type="number" inputmode="numeric" step="1" autocomplete="off">
+    </div>
+
+    <button id="analyzeBtn" type="button">Analyze Offer</button>
+  </div>
+
+  <div id="quickDecision" class="quick-decision" aria-live="polite">
+    <div id="quickDecisionText"></div>
+    <div id="quickScore"></div>
+  </div>
+
+  <div class="card results-card">
+    <h2>Results</h2>
+    <p id="ppm">Pay Per Mile:</p>
+    <p id="hourly">Gross Hourly:</p>
+    <p id="score">Judah Score:</p>
+    <p id="decision">Grade:</p>
+    <h2>Driver Intelligence</h2>
+    <p id="reason"></p>
+  </div>
 </div>
 
 <script src="app.js"></script>
-
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js"));
+}
+</script>
 </body>
 </html>

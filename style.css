@@ -1,68 +1,114 @@
+* { box-sizing: border-box; }
+
 body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #121212;
-    color: white;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #121212;
+  color: white;
 }
 
 .container {
-    max-width: 420px;
-    margin: auto;
-    padding: 20px;
+  max-width: 520px;
+  margin: auto;
+  padding: 18px;
 }
 
 h1 {
-    text-align: center;
-    color: #00d26a;
+  text-align: center;
+  color: #00d26a;
+  margin: 4px 0 8px;
 }
 
 .subtitle {
-    text-align: center;
-    color: #aaaaaa;
-    margin-bottom: 25px;
+  text-align: center;
+  color: #aaa;
+  margin: 0 0 18px;
 }
 
 .card {
-    background: #1f1f1f;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
+  background: #1f1f1f;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+
+.input-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 12px;
+}
+
+.field {
+  min-width: 0;
 }
 
 label {
-    display: block;
-    margin-top: 15px;
-    margin-bottom: 6px;
-    font-weight: bold;
+  display: block;
+  margin: 0 0 6px;
+  font-weight: bold;
+  font-size: 15px;
 }
 
 input {
-    width: 100%;
-    padding: 12px;
-    font-size: 18px;
-    border-radius: 8px;
-    border: none;
-    box-sizing: border-box;
+  width: 100%;
+  min-height: 52px;
+  padding: 10px 12px;
+  font-size: 21px;
+  border-radius: 9px;
+  border: 2px solid transparent;
+  background: #fff;
+  color: #111;
+  outline: none;
+}
+
+input:focus {
+  border-color: #00d26a;
 }
 
 button {
-    width: 100%;
-    margin-top: 20px;
-    padding: 16px;
-    font-size: 20px;
-    background: #00c853;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
+  grid-column: 1 / -1;
+  width: 100%;
+  min-height: 54px;
+  margin-top: 2px;
+  padding: 12px;
+  font-size: 19px;
+  font-weight: bold;
+  background: #00c853;
+  color: white;
+  border: none;
+  border-radius: 10px;
 }
 
-button:hover {
-    background: #00a844;
+.quick-decision {
+  display: none;
+  background: #1f1f1f;
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  text-align: center;
 }
 
-#decision {
-    text-align: center;
-    font-size: 28px;
-    margin-top: 20px;
+#quickDecisionText {
+  font-size: 30px;
+  font-weight: 800;
+}
+
+#quickScore {
+  margin-top: 3px;
+  font-size: 18px;
+}
+
+.results-card h2 {
+  margin-top: 0;
+}
+
+.results-card p {
+  margin: 10px 0;
+}
+
+@media (max-width: 380px) {
+  .container { padding: 12px; }
+  .card { padding: 14px; }
+  label { font-size: 14px; }
+  input { min-height: 48px; font-size: 19px; }
 }
