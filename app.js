@@ -102,11 +102,12 @@ function analyzeOffer() {
 
   document.getElementById("ppm").textContent = "Pay Per Mile: $" + payPerMile.toFixed(2);
   document.getElementById("hourly").textContent = "Gross Hourly: $" + grossHourly.toFixed(2);
-  document.getElementById("score").textContent = "Judah Score: " + score + "/100";
+  document.getElementById("score").textContent = "Gig Score: " + score + "/100";
   document.getElementById("decision").textContent = "Grade: " + decision;
   document.getElementById("reason").textContent = reason;
 
   document.getElementById("quickDecisionText").textContent = decision;
-  document.getElementById("quickScore").textContent = "Judah Score: " + score + "/100";
+  document.getElementById("quickScore").textContent = "Gig Score: " + score + "/100";
   document.getElementById("quickDecision").style.display = "block";
 }
+
