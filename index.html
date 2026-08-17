@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -8,12 +8,80 @@
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 <div class="container">
+
   <h1>🚗 Gig Edge</h1>
   <p class="subtitle">Gig Offer Analyzer</p>
 
-  <div class="card input-card">
+  <!-- RAPID DECISION -->
+  <div class="card rapid-card">
+    <div class="rapid-header">
+      <h2>⚡ Rapid Decision</h2>
+      <p>Make the fastest safe decision possible.</p>
+    </div>
+
+    <div class="rapid-grid">
+
+      <div class="field">
+        <label for="rapidPay">💰 Pay ($)</label>
+        <input
+          id="rapidPay"
+          type="number"
+          inputmode="decimal"
+          step="0.01"
+          autocomplete="off"
+          placeholder="48.00">
+      </div>
+
+      <div class="field">
+        <label for="rapidMiles">🚗 Offer Miles</label>
+        <input
+          id="rapidMiles"
+          type="number"
+          inputmode="decimal"
+          step="0.1"
+          autocomplete="off"
+          placeholder="12">
+      </div>
+
+    </div>
+
+    <div id="rapidResult" class="rapid-result" aria-live="polite">
+      <div id="rapidDecision"></div>
+      <div id="rapidRate"></div>
+      <div id="rapidScore"></div>
+    </div>
+
+    <div id="pickupSection" class="pickup-section">
+      <label for="pickupMiles">📍 Add Pickup Miles <span>(optional)</span></label>
+      <input
+        id="pickupMiles"
+        type="number"
+        inputmode="decimal"
+        step="0.1"
+        min="0"
+        autocomplete="off"
+        placeholder="Miles to pickup">
+
+      <div id="trueMilesResult" class="true-miles-result"></div>
+    </div>
+
+    <button id="fullAnalysisBtn" type="button" class="secondary-button">
+      🎯 Full Analysis
+    </button>
+  </div>
+
+
+  <!-- FULL ANALYSIS -->
+  <div id="fullAnalysis" class="card input-card">
+
+    <div class="full-header">
+      <h2>🎯 Full Analysis</h2>
+      <p>Use when you have time for a complete evaluation.</p>
+    </div>
+
     <div class="field">
       <label for="pay">💰 Order Pay ($)</label>
       <input id="pay" type="number" inputmode="decimal" step="0.01" autocomplete="off">
@@ -37,10 +105,12 @@
     <button id="analyzeBtn" type="button">Analyze Offer</button>
   </div>
 
+
   <div id="quickDecision" class="quick-decision" aria-live="polite">
     <div id="quickDecisionText"></div>
     <div id="quickScore"></div>
   </div>
+
 
   <div class="card results-card">
     <h2>Results</h2>
@@ -48,18 +118,22 @@
     <p id="hourly">Gross Hourly:</p>
     <p id="score">Gig Score:</p>
     <p id="decision">Grade:</p>
+
     <h2>Driver Intelligence</h2>
     <p id="reason"></p>
   </div>
+
 </div>
 
 <script src="app.js"></script>
+
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js"));
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js");
+  });
 }
 </script>
+
 </body>
 </html>
-
-

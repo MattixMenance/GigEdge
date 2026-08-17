@@ -1,4 +1,6 @@
-* { box-sizing: border-box; }
+﻿* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -32,10 +34,115 @@ h1 {
   margin-bottom: 14px;
 }
 
-.input-card {
+
+/* ============================================================
+   RAPID MODE
+   ============================================================ */
+
+.rapid-card {
+  border: 2px solid #00d26a;
+}
+
+.rapid-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.rapid-header h2 {
+  margin: 0 0 5px;
+  color: #00d26a;
+}
+
+.rapid-header p,
+.full-header p {
+  margin: 0;
+  color: #aaa;
+  font-size: 14px;
+}
+
+.rapid-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.rapid-result {
+  min-height: 116px;
+  margin-top: 14px;
+  padding: 15px;
+  border-radius: 12px;
+  background: #121212;
+  text-align: center;
+}
+
+#rapidDecision {
+  font-size: 31px;
+  font-weight: 900;
+}
+
+#rapidRate {
+  margin-top: 6px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#rapidScore {
+  margin-top: 5px;
+  font-size: 16px;
+  color: #aaa;
+}
+
+.pickup-section {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #3a3a3a;
+}
+
+.pickup-section label {
+  margin-bottom: 7px;
+}
+
+.pickup-section label span {
+  color: #999;
+  font-weight: normal;
+  font-size: 13px;
+}
+
+.true-miles-result {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #121212;
+  line-height: 1.6;
+  text-align: center;
+  font-size: 16px;
+}
+
+.secondary-button {
+  margin-top: 14px;
+  background: #333;
+  border: 1px solid #555;
+}
+
+
+/* ============================================================
+   FULL ANALYSIS
+   ============================================================ */
+
+.input-card {
+  display: none;
+  grid-template-columns: 1fr 1fr;
   gap: 14px 12px;
+}
+
+.full-header {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-bottom: 2px;
+}
+
+.full-header h2 {
+  margin: 0 0 5px;
 }
 
 .field {
@@ -107,8 +214,29 @@ button {
 }
 
 @media (max-width: 380px) {
-  .container { padding: 12px; }
-  .card { padding: 14px; }
-  label { font-size: 14px; }
-  input { min-height: 48px; font-size: 19px; }
+
+  .container {
+    padding: 12px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  label {
+    font-size: 14px;
+  }
+
+  input {
+    min-height: 48px;
+    font-size: 19px;
+  }
+
+  #rapidDecision {
+    font-size: 27px;
+  }
+
+  #rapidRate {
+    font-size: 18px;
+  }
 }
