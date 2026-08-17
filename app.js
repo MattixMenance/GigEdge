@@ -328,4 +328,178 @@ function analyzeOffer() {
   document.getElementById("quickDecision").style.display =
     "block";
 }
+// ============================================================
+// PICKUP MILES — AUTO / MANUAL ROUTING TEST
+// ============================================================
 
+const autoPickupBtn = document.getElementById("autoPickupBtn");
+const manualPickupBtn = document.getElementById("manualPickupBtn");
+const autoPickupPanel = document.getElementById("autoPickupPanel");
+const manualPickupPanel = document.getElementById("manualPickupPanel");
+const pickupAddress = document.getElementById("pickupAddress");
+const getPickupMilesBtn = document.getElementById("getPickupMilesBtn");
+const pickupAutoStatus = document.getElementById("pickupAutoStatus");
+
+autoPickupBtn.addEventListener("click", () => {
+  autoPickupPanel.style.display = "block";
+  manualPickupPanel.style.display = "none";
+  pickupAutoStatus.textContent = "";
+});
+
+manualPickupBtn.addEventListener("click", () => {
+  autoPickupPanel.style.display = "none";
+  manualPickupPanel.style.display = "block";
+  pickupAutoStatus.textContent = "";
+  pickupMiles.focus();
+});
+
+async function geocodePickupAddress(address) {
+  const url =
+    "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=" +
+    encodeURIComponent(address);
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error("Address lookup failed.");
+  }
+
+  const results = await response.json();
+
+  if (!results.length) {
+    throw new Error("Pickup address not found.");
+  }
+
+  return {
+    latitude: parseFloat(results[0].lat),
+    longitude: parseFloat(results[0].lon)
+  };
+}
+
+async function getDrivingDistance(
+  startLatitude,
+  startLongitude,
+  endLatitude,
+  endLongitude
+) {
+  const coordinates =
+    `${startLongitude},${startLatitude};` +
+    `${endLongitude},${endLatitude}`;
+
+  const url =
+    "https://router.project-osrm.org/route/v1/driving/" +
+    coordinates +
+    "?overview=false";
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error("Routing request failed.");
+  }
+
+  const data = await response.json();
+
+  if (data.code !== "Ok" || !data.routes || !data.routes.length) {
+    throw new Error("No driving route found.");
+  }
+
+  return data.routes[0].distance / 1609.344;
+}
+
+getPickupMilesBtn.addEventListener("click", () => {
+  const address = pickupAddress.value.trim();
+
+  if (!address) {
+    pickupAutoStatus.textContent =
+      "⚠️ Enter the pickup address first.";
+    pickupAddress.focus();
+    return;
+  }
+
+  if (!navigator.geolocation) {
+    pickupAutoStatus.textContent =
+      "⚠️ Location services are unavailable.";
+    return;
+  }
+
+  pickupAutoStatus.textContent =
+    "📍 Getting current location...";
+
+  getPickupMilesBtn.disabled = true;
+
+  navigator.geolocation.getCurrentPosition(
+    async position => {
+      try {
+        const startLatitude = position.coords.latitude;
+        const startLongitude = position.coords.longitude;
+
+        pickupAutoStatus.textContent =
+          "🔎 Finding pickup location...";
+
+        const destination =
+          await geocodePickupAddress(address);
+
+        pickupAutoStatus.textContent =
+          "🛣️ Calculating driving distance...";
+
+        const distance = await getDrivingDistance(
+          startLatitude,
+          startLongitude,
+          destination.latitude,
+          destination.longitude
+        );
+
+        pickupMiles.value = distance.toFixed(1);
+
+        const pay = parseFloat(rapidPay.value);
+        const miles = parseFloat(rapidMiles.value);
+
+        if (
+          !Number.isNaN(pay) &&
+          !Number.isNaN(miles) &&
+          pay > 0 &&
+          miles > 0
+        ) {
+          calculateTrueMiles(pay, miles);
+        }
+
+        pickupAutoStatus.textContent =
+          "✅ Pickup distance: " +
+          distance.toFixed(1) +
+          " miles";
+
+      } catch (error) {
+        console.error("Gig Edge pickup routing error:", error);
+
+        pickupAutoStatus.textContent =
+          "⚠️ " + error.message;
+      } finally {
+        getPickupMilesBtn.disabled = false;
+      }
+    },
+
+    error => {
+      getPickupMilesBtn.disabled = false;
+
+      if (error.code === 1) {
+        pickupAutoStatus.textContent =
+          "⚠️ Location permission was denied.";
+      } else if (error.code === 2) {
+        pickupAutoStatus.textContent =
+          "⚠️ Your location could not be determined.";
+      } else if (error.code === 3) {
+        pickupAutoStatus.textContent =
+          "⚠️ Location request timed out.";
+      } else {
+        pickupAutoStatus.textContent =
+          "⚠️ Unable to get your location.";
+      }
+    },
+
+    {
+      enableHighAccuracy: false,
+      timeout: 10000,
+      maximumAge: 30000
+    }
+  );
+});

@@ -54,19 +54,50 @@
       <div id="rapidScore"></div>
     </div>
 
-    <div id="pickupSection" class="pickup-section">
-      <label for="pickupMiles">📍 Add Pickup Miles <span>(optional)</span></label>
-      <input
-        id="pickupMiles"
-        type="number"
-        inputmode="decimal"
-        step="0.1"
-        min="0"
-        autocomplete="off"
-        placeholder="Miles to pickup">
+   <div id="pickupSection" class="pickup-section">
+  <label>📍 Pickup Miles <span>(optional)</span></label>
 
-      <div id="trueMilesResult" class="true-miles-result"></div>
-    </div>
+  <div class="pickup-mode-buttons">
+    <button id="autoPickupBtn" type="button" class="pickup-mode-btn">
+      📍 AUTO
+    </button>
+
+    <button id="manualPickupBtn" type="button" class="pickup-mode-btn">
+      ✏️ MANUAL
+    </button>
+  </div>
+
+  <div id="autoPickupPanel" class="pickup-panel">
+    <label for="pickupAddress">Pickup Address</label>
+
+    <input
+      id="pickupAddress"
+      type="text"
+      autocomplete="off"
+      placeholder="Paste pickup address">
+
+    <button id="getPickupMilesBtn" type="button">
+      📍 Get Pickup Miles
+    </button>
+
+    <div id="pickupAutoStatus" aria-live="polite"></div>
+  </div>
+
+  <div id="manualPickupPanel" class="pickup-panel" style="display:none;">
+    <label for="pickupMiles">Enter Pickup Miles</label>
+
+    <input
+      id="pickupMiles"
+      type="number"
+      inputmode="decimal"
+      step="0.1"
+      min="0"
+      autocomplete="off"
+      placeholder="Miles to pickup">
+  </div>
+
+  <div id="trueMilesResult" class="true-miles-result"></div>
+</div>
 
     <button id="fullAnalysisBtn" type="button" class="secondary-button">
       🎯 Full Analysis
